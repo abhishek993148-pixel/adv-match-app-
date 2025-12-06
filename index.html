@@ -1,0 +1,1753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdVenture Match - Level Up</title>  
+<link rel="icon" href="app_logo.png" type="image/png">
+<link rel="apple-touch-icon" href="app_logo.png">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script>
+    // ⚠️ Note: Adsterra Global Script is commented out.
+    /*
+    (function(d, s) {
+        var js = d.createElement(s),
+            sc = d.getElementsByTagName(s)[0];
+        js.src = 'YOUR_ADSTERRA_SCRIPT_URL/xxxxxxxx.js'; 
+        js.async = true;
+        sc.parentNode.insertBefore(js, sc);
+    })(document, 'script');
+    */
+    
+</script>
+<style>
+/* 🚀 PROFESSIONAL & ULTRA-COMPACT LAYOUT */
+
+/* global reset */
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+html {height: 100%;}
+body{
+  /* Adult Theme Change: Darker background, gold/darker accents */
+  background:#111;color:#fff;text-align:center;
+  min-height:100vh;
+  padding-bottom: 60px; 
+}
+
+/* pages */
+#loginPage, #dashboard, #gamePage {
+  display:none;
+  padding:0; 
+  width: 100%; 
+}
+
+/* inputs */
+input{width:100%;padding:12px;margin-top:12px;border:none;border-radius:10px;font-size:16px; background: #333; color: #fff;}
+
+/* buttons */
+/* Adult Theme Change: Accent color changed to a richer orange/red */
+button{background:#d35400;color:#fff;border:none;padding:12px 25px;border-radius:10px;margin-top:15px;cursor:pointer;font-size:16px;width:100%;}
+button:active{background:#b84c00}
+/* card */
+.app-card{max-width:450px;width:90%;margin:30px auto;padding:30px;background:#1e1e1e;border-radius:30px;box-shadow:0 8px 15px rgba(0,0,0,.5);}
+
+/* dashboard page */
+#dashboard.app-card {
+    padding: 20px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
+    border-radius: 0;
+    min-height: calc(100vh - 60px); 
+}
+
+/* profile header (Professional Look) */
+.profile-header{
+    display: flex;align-items: center;text-align: left;margin-bottom: 20px;
+    padding: 15px 20px; border-radius: 12px;
+    background: linear-gradient(45deg, #2c3e50, #161e27); color: #fff; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4); 
+}
+.profile-pic {
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%;
+    /* Adult Theme Change: Color to a deep gold */
+    background: #f1c40f; 
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+}
+.profile-info {
+    flex-grow: 1; 
+}
+.profile-info h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.profile-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #ccc;
+}
+/* TOKEN DISPLAY STYLES */
+#coinDisplay {
+    /* Adult Theme Change: Color to gold/yellow */
+    background: #f39c12; 
+    color: #111;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin-left: 15px;
+    white-space: nowrap; 
+}
+
+
+/* button grid for game selection: 2-COLUMN GRID */
+#buttonGrid {
+  display:grid; 
+  /* 2 columns for the first two games */
+  grid-template-columns: 1fr 1fr; 
+  /* ADJUSTMENT: Very small gap for the compact, professional look */
+  gap: 10px; 
+  margin-top:30px;
+}
+
+/* NEW: Container for Game Button + Upgrade Button */
+.game-group {
+    display: flex;
+    flex-direction: column;
+    /* ADJUSTMENT: Minimal vertical gap between tile and upgrade buttons */
+    gap: 5px; 
+    grid-column: span 1; 
+}
+
+/* *** 🚀 CRYPTO MATCH RECTANGULAR ADJUSTMENT 🚀 *** */
+/* Crypto Match will take up both columns */
+.crypto-group {
+    grid-column: 1 / span 2; 
+}
+/* NEW: Lock Overlay Styling */
+.game-locked-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    z-index: 10;
+}
+.game-locked-overlay i {
+    font-size: 35px;
+    margin-bottom: 5px;
+    /* Adult Theme Change: Color to a deep gold */
+    color: #f39c12;
+}
+
+/* NEW: Container for UNLOCK Button (spans all 3 game groups) */
+#unlock-container {
+    grid-column: 1 / span 2; 
+    padding: 10px 0;
+    display: none; /* Controlled by JS */
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid #333;
+    margin-top: 15px;
+}
+.unlock-btn {
+    /* Adult Theme Change: Accent color changed to a richer orange/red */
+    background: linear-gradient(90deg, #e74c3c, #c0392b) !important;
+    color: #fff !important;
+    padding: 15px 25px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,.6);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.unlock-btn i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+.unlock-info {
+    font-size: 12px;
+    color: #ccc;
+    text-align: center;
+}
+
+
+/* Main Game Tile Styling (Square/Compact) */
+.grid-tile{
+  all: unset; 
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+    
+  width: 100%;
+  /* Default height for 2x2 buttons */
+  height: 135px; 
+  min-height: 135px; 
+  padding: 10px;
+  font-size: 15px;
+  /* ADJUSTMENT: Increased border radius for sleeker look */
+  border-radius: 18px; 
+  box-shadow: 0 4px 10px rgba(0,0,0,.5);
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin-top: 0 !important; 
+  position: relative; /* For Lock Overlay */
+}
+
+/* ADJUSTMENT: Rectangular height for Crypto Match when it spans 2 columns */
+.crypto-group .grid-tile {
+    /* Reduced height to make it rectangular */
+    height: 90px; 
+    min-height: 90px;
+}
+
+.grid-tile:active {
+    transform: translatey(2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,.3);
+}
+
+.grid-tile .button-icon {
+    font-size: 30px; 
+    margin-right: 0; 
+    margin-bottom: 5px; 
+}
+
+/* ADJUSTMENT: Icons smaller for rectangular tile */
+.crypto-group .grid-tile .button-icon {
+    font-size: 24px;
+}
+
+.grid-tile .button-label {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.2;
+    white-space: nowrap; 
+}
+.grid-tile .level-indicator {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 3px 8px;
+    border-radius: 4px; 
+    font-size: 10px;
+    margin-top: 5px;
+    justify-self: unset; 
+    margin-left: 0;
+}
+
+
+/* Specific button styles for games - Professional Gradients */
+.invest-game-btn {
+  /* Adult Theme Change: Financial gradient */
+  background:linear-gradient(45deg,#2ecc71,#27ae60)!important; 
+  color:#fff;
+}
+.tech-game-btn {
+  /* Adult Theme Change: Tech gradient */
+  background:linear-gradient(45deg,#3498db,#2980b9)!important; 
+  color:#fff;
+}
+.crypto-game-btn {
+  /* Adult Theme Change: Crypto gradient */
+  background:linear-gradient(45deg,#f1c40f,#e67e22)!important; 
+  color:#fff;
+  /* *** 🟢 MAIN FIX: Animal Match Content Alignment 🟢 *** */
+  flex-direction: row !important;
+  justify-content: center !important; 
+  align-items: center !important; 
+}
+
+/* 🟢 FIX: Remove conflicting alignments for the wide crypto button 🟢 */
+.crypto-game-btn .button-icon {
+    margin-right: 15px; 
+    margin-bottom: 0;
+}
+.crypto-game-btn .button-label {
+    flex-grow: 0; 
+    text-align: center; 
+    margin-right: 15px; 
+}
+.crypto-game-btn .level-indicator {
+    margin-left: 0; 
+}
+/* 🟢 END FIX 🟢 */
+
+
+/* Upgrade Button Styling (Below the tile) */
+.upgrade-game-btn {
+    /* Adult Theme Change: Accent color changed to a richer orange/red */
+    background: linear-gradient(90deg, #d35400, #a04000) !important;
+    color: #fff !important;
+    padding: 12px 10px !important; /* Slightly increased padding for prominence */
+    font-size: 14px !important; /* Slightly increased font size */
+    height: auto !important;
+    margin-top: 0 !important; 
+    border-radius: 12px !important; 
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,.5);
+    margin-bottom: 10px; /* Space before next element/group */
+}
+.upgrade-game-btn i {
+    margin: 0 5px;
+    font-size: 16px;
+}
+
+
+/* NEW: Watch Ad to Earn Button */
+#earn-coin-btn {
+    background: linear-gradient(45deg, #1abc9c, #16a085) !important;
+    color: #fff !important;
+    padding: 15px 25px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,.6);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto; 
+    grid-column: 1 / span 2;
+}
+#earn-coin-btn i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* icon button grid styling (telegram/rate us) */
+/* --- MODIFICATION START: Single-column grid for Rate Us --- */
+#icon-btn-grid {
+    display: grid;
+    /* Only 1 column now */
+    grid-template-columns: 1fr; 
+    gap: 15px;
+    margin-top: 25px; 
+    margin-bottom: 15px; 
+}
+/* --- MODIFICATION END --- */
+
+.social-icon-btn {
+    padding: 15px 0; 
+    font-size: 17px; 
+    width: 100%;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin-top: 0 !important; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    font-weight: bold;
+}
+/* REMOVED: Style for openTelegram */
+.social-icon-btn[onclick*="openRateUs"] {
+    /* Adult Theme Change: Rating color */
+    background:linear-gradient(45deg,#f39c12,#d35400)!important; color:#fff!important;
+}
+.social-icon-btn i {
+    font-size: 24px;
+    margin-right: 8px;
+}
+.social-icon-btn:active {
+    transform: translatey(2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,.3);
+}
+
+.logout-btn{
+  background:#424242!important;
+  color:#eee!important;
+  margin-top: 15px !important; 
+  height: auto !important;
+  flex-direction: row; 
+  justify-content: center !important;
+  font-size: 16px;
+  font-weight: bold;
+}
+.logout-btn .button-icon {
+    margin-bottom: 0;
+    margin-left: 10px;
+    font-size: 24px;
+}
+
+/* game grid styling */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr; 
+    gap:15px;
+    margin:25px auto;
+    max-width:380px;
+}
+.game-img{ 
+    width:100%;
+    border-radius:12px;
+    box-shadow:0 5px 10px rgba(0,0,0,.5);
+    cursor:pointer;
+    transition:.2s;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    background: #333; 
+    height: 120px; 
+    font-size: 60px; 
+    padding: 10px;
+}
+.game-img:active{transform:scale(.93)}
+
+#message{margin-top:20px;font-size:18px;min-height:28px}
+
+/* Game Header Styling */
+.game-header-container {
+    /* Adult Theme Change: Header color */
+    background: linear-gradient(90deg, #f39c12, #e67e22); 
+    color: #111;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin: 20px auto 25px auto;
+    max-width: 400px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px; 
+    color: #111; 
+}
+
+#gameLimitDisplay {
+    font-size: 14px;
+    font-weight: 500;
+    color: #444; 
+}
+
+
+/* login page styling */
+#loginPage .app-card{max-width:400px;width:90%;margin:auto;padding:30px;display:flex;flex-direction:column;justify-content:center;min-height: 100vh;border-radius: 0;}
+#loginPage {min-height: 100vh;}
+/* Adult Theme Change: Login icon to a more business/adult symbol */
+#loginAppleIcon{font-size:60px;margin-bottom:15px;color:#f39c12;display:block;text-align:center;width:100%;}
+#loginPage h2{margin-bottom: 20px;}
+input{margin-top: 15px;padding:14px;}
+
+/* sticky banner ad styling */
+#stickyBannerAd {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%); 
+  width: 100%; 
+  max-width: 450px; 
+  background: #222; 
+  padding: 5px 0; 
+  z-index: 1000; 
+  text-align: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+  height: 60px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Toast Message Styling */
+#toastContainer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1010;
+    max-width: 90%;
+}
+.toast-message {
+    background: linear-gradient(90deg, #1e1e1e, #333);
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(-20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    /* Adult Theme Change: Toast border color */
+    border-left: 5px solid #f39c12; 
+}
+.toast-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-message i {
+    margin-right: 10px;
+    /* Adult Theme Change: Toast icon color */
+    color: #f39c12;
+}
+
+/* 🏆 CUSTOM MODAL STYLES (NEW) 🏆 */
+.custom-modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); 
+    z-index: 1020;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.custom-modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.custom-modal-content {
+    background: #1e1e1e;
+    color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.2s ease-in-out;
+}
+
+.custom-modal-overlay.show .custom-modal-content {
+    transform: scale(1);
+}
+
+.custom-modal-content h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    /* Adult Theme Change: Modal header color */
+    color: #f39c12;
+}
+
+.custom-modal-content p {
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+.custom-modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+/* Custom Modal Buttons */
+.modal-btn {
+    all: unset;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    flex-grow: 1;
+    text-align: center;
+    transition: background-color 0.1s;
+}
+
+.modal-btn.confirm-btn {
+    background: #4CAF50; /* Green for OK */
+    color: #fff;
+}
+
+.modal-btn.confirm-btn:active {
+    background: #388E3C;
+}
+
+.modal-btn.cancel-btn {
+    background: #f44336; /* Red for Cancel */
+    color: #fff;
+}
+
+.modal-btn.cancel-btn:active {
+    background: #D32F2F;
+}
+</style>
+</head>
+
+<body> 
+
+<div id="toastContainer"></div>
+
+<div id="customModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+        <h3 id="modalTitle">Reward Confirmation</h3>
+        <p id="modalMessage">Did you successfully watch the full Ad? Click OK to receive 200 Tokens.</p>
+        <div class="custom-modal-actions">
+            <button class="modal-btn cancel-btn">Cancel</button>
+            <button class="modal-btn confirm-btn">OK</button>
+        </div>
+    </div>
+</div>
+<div id="mainApp" style="display:none;">
+
+  <div id="loginPage">
+    <div class="app-card">
+        <div id="loginAppleIcon"><i class="fas fa-chart-line"></i></div> 
+        <h2 id="authTitle">AdVenture Match: Level Up</h2> 
+        <div id="loginContent">
+            <input id="nameInput" type="text" placeholder="enter your name" required> 
+            <input id="email" type="email" placeholder="enter email" required>
+            <input id="password" type="password" placeholder="enter password" required>
+        </div>
+        <p id="loginMessage" style="color: #f39c12; font-weight: bold; margin-top: 10px; min-height: 20px;"></p>
+        
+        <button id="authButton" onclick="handleAuth()">create account</button> 
+        
+        <p style="margin-top: 20px; color: #ccc;">
+            <span id="toggleMessage">already have an account?</span> 
+            <a href="#" onclick="toggleLoginRegister()" style="color: #f39c12; text-decoration: none; font-weight: bold;">
+                click here to login
+            </a>
+        </p>
+        
+    </div>
+  </div>
+  
+  <div id="dashboard" class="app-card">
+    
+    <div class="profile-header">
+        <div class="profile-pic">A</div> 
+        <div class="profile-info">
+            <h3 id="profileNameDisplay">Hello, Guest!</h3>
+            <p>Welcome to AdVenture Match! 
+                <span id="levelDisplay" style="color: #f39c12; font-weight: bold;">Level: 1</span> | 
+                <span id="prestigeCountDisplay" style="color: #e74c3c; font-weight: bold;">Prestige: 0</span>
+            </p> 
+        </div>
+        <div id="coinDisplay">
+            <i class="fas fa-dollar-sign"></i> <span id="coinCount">0</span>
+        </div>
+    </div>
+    
+    <h2 style="margin-top: 20px; margin-bottom: 15px;">Choose Your Focus!</h2>
+
+    
+    <div id="buttonGrid"> 
+      
+      <button onclick="watchAdToEarnCoins()" id="earn-coin-btn">
+          <i class="fas fa-play-circle"></i> Watch Ad for 200 Tokens
+      </button>
+
+      <div class="game-group game-group-fruit">
+          <button onclick="startGame('fruit')" class="invest-game-btn grid-tile" id="tile-fruit">
+              <i class="fas fa-chart-line button-icon"></i> 
+              <span class="button-label">Invest Match</span>
+              <span class="level-indicator" id="lvl-fruit">Lvl 1</span> 
+          </button>
+          <p id="progress-fruit" class="unlock-info" style="color: yellow; margin-top: 5px;"></p> 
+
+          <button onclick="levelUpGame('fruit')" class="upgrade-game-btn" id="upgrade-fruit">
+             <i class="fas fa-arrow-up"></i> Boost to Lvl 2 (400 <i class="fas fa-dollar-sign"></i>)
+          </button>
+      </div>
+      
+      <div class="game-group game-group-toy">
+          <button onclick="startGame('toy')" class="tech-game-btn grid-tile" id="tile-toy">
+              <i class="fas fa-laptop-code button-icon"></i>
+              <span class="button-label">Tech Match</span>
+              <span class="level-indicator" id="lvl-toy">Lvl 1</span>
+          </button>
+          <p id="progress-toy" class="unlock-info" style="color: yellow; margin-top: 5px;"></p>
+
+          <button onclick="levelUpGame('toy')" class="upgrade-game-btn" id="upgrade-toy">
+             <i class="fas fa-arrow-up"></i> Boost to Lvl 2 (500 <i class="fas fa-dollar-sign"></i>)
+          </button>
+      </div>
+
+      <div class="game-group crypto-group game-group-animal">
+          <button onclick="startGame('animal')" class="crypto-game-btn grid-tile" id="tile-animal">
+              <i class="fab fa-bitcoin button-icon"></i>
+              <span class="button-label">Crypto Match</span>
+              <span class="level-indicator" id="lvl-animal">Lvl 1</span>
+              
+              <div class="game-locked-overlay" id="lock-overlay-animal" style="display: none;">
+                  <i class="fas fa-lock"></i>
+                  <span>LOCKED</span>
+              </div>
+          </button>
+          <p id="progress-animal" class="unlock-info" style="color: yellow; margin-top: 5px;"></p>
+
+          <button onclick="levelUpGame('animal')" class="upgrade-game-btn" id="upgrade-animal">
+             <i class="fas fa-arrow-up"></i> Boost to Lvl 2 (600 <i class="fas fa-dollar-sign"></i>)
+          </button>
+      </div>
+      
+      <div id="unlock-container">
+            <button onclick="handleUnlockAnimalGame()" class="unlock-btn" id="unlock-button">
+                 <i class="fas fa-unlock"></i> Unlock Crypto Match (5000 <i class="fas fa-dollar-sign"></i>)
+            </button>
+            <p class="unlock-info" id="unlock-cost-info"></p>
+      </div>
+      
+    </div>
+    
+    <div id="icon-btn-grid">
+        <button onclick="openRateUs()" class="social-icon-btn" style="grid-column: 1 / span 1;">
+            <i class="fas fa-star"></i> Rate Us
+        </button>
+    </div>
+    
+    <button onclick="logout()" class="logout-btn">
+        <span>&#10145;&#xfe0f; Logout</span>
+        <i class="fas fa-sign-out-alt button-icon"></i>
+    </button>
+    
+  </div>
+  
+  <div id="gamePage">
+    <div class="game-header-container">
+        <h2 id="question"></h2>
+        <p id="gameLimitDisplay"></p>
+    </div>
+    
+    <div class="grid" id="gameGrid"></div> 
+
+    <div id="message"></div>
+    <button onclick="backToDashboard()">&#11013;&#xfe0f; Back to Focus</button>
+  </div>
+
+</div>
+
+<div id="stickyBannerAd">
+    <div id="adsterra-banner-container" style="width: 320px; height: 50px;">
+        <script type="text/javascript">
+        atOptions = {
+            'key' : '0169a911c0f94e7e37bc1cfd1fd44f70', 
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+        };
+        </script>
+        <script type="text/javascript" src="//www.topcreativeformat.com/0169a911c0f94e7e37bc1cfd1fd44f70/invoke.js"></script>
+        </div>
+</div>
+<script>
+// --- CONFIGURATION START (FINAL) ---
+const COIN_REWARD = 30; 
+const COINS_STORAGE_KEY = "userTokens"; // Changed to Tokens
+const GAME_COUNT_PREFIX = "dailyGameCount_"; 
+const LAST_PLAY_DATE_PREFIX = "lastPlayDate_"; 
+const LEVEL_STORAGE_KEY = "userGameLevels"; 
+const PRESTIGE_STORAGE_KEY = "userPrestigeCount"; 
+const GAMES_PLAYED_LEVEL_KEY = "gamesPlayedOnCurrentLevel"; 
+const ANIMAL_UNLOCKED_KEY = "isCryptoUnlocked"; // Changed to Crypto
+
+const GAME_LIMITS = {
+    fruit: 15,
+    toy: 15,
+    animal: 15
+};
+
+const MAX_LEVEL = 4; // Max level for any single game
+const DEFAULT_LEVELS = {
+    fruit: 1, // Invest Match
+    toy: 1,   // Tech Match
+    animal: 0 // Crypto Match
+};
+
+// 💡 GAMEPLAY CONDITION: Level Up से पहले 5 सफल गेम ज़रूरी
+const GAMES_NEEDED_FOR_UPGRADE = 5; 
+const COIN_AD_REWARD = 200; 
+
+// 👑 Unlock Configuration (Replaces Prestige Cost)
+const UNLOCK_COST = 5000; 
+
+// GAME-SPECIFIC LEVEL COST CONFIGURATION 
+const GAME_LEVEL_COSTS = {
+    fruit: [ // Invest Match (formerly Fruit)
+        {level: 1, size: 4, cost: 400},  
+        {level: 2, size: 6, cost: 700},  
+        {level: 3, size: 9, cost: 1200}, 
+        {level: 4, size: 12, cost: Infinity}
+    ],
+    toy: [ // Tech Match (formerly Toy)
+        {level: 1, size: 4, cost: 500}, 
+        {level: 2, size: 6, cost: 900}, 
+        {level: 3, size: 9, cost: 1400}, 
+        {level: 4, size: 12, cost: Infinity}
+    ],
+    // Crypto costs are higher to match the final game status
+    animal: [ // Crypto Match (formerly Animal)
+        {level: 1, size: 4, cost: 600}, 
+        {level: 2, size: 6, cost: 1100}, 
+        {level: 3, size: 9, cost: 1600}, 
+        {level: 4, size: 12, cost: Infinity}
+    ]
+};
+
+
+// REMOVED: const TELEGRAM_LINK
+const APP_STORE_LINK = "your_app_store_link"; // Replace with your link
+
+// 🚨 IMPORTANT: ADSTERRA DIRECT LINKS HERE 🚨
+// 🎯 SMARTLINK URL PASTED 🎯
+const INTERSTITIAL_AD_URL = "https://www.effectivegatecpm.com/yykdh7g/g/?key=bca67af9ed2be244e39aa619b4ed5701"; 
+const REWARDED_AD_URL = "https://www.effectivegatecpm.com/yykdh7g/g/?key=bca67af9ed2be244e39aa619b4ed5701"; 
+
+// --- GAME DATA (Adult/Financial/Tech Theme) ---
+const fruitData = [ // Invest Match
+  {name:"Stock",img:"📈"}, 
+  {name:"Bond",img:"📑"}, 
+  {name:"Real Estate",img:"🏢"}, 
+  {name:"Commodity",img:"💎"}, 
+  {name:"Bank",img:"🏦"}, 
+  {name:"Loan",img:"💸"}, 
+  {name:"Dividend",img:"💰"}, 
+  {name:"Portfolio",img:"📊"}
+];
+
+const toyData = [ // Tech Match
+  {name:"Coding",img:"💻"}, 
+  {name:"AI",img:"🧠"}, 
+  {name:"Server",img:"💾"}, 
+  {name:"Security",img:"🔒"}, 
+  {name:"App",img:"📱"}, 
+  {name:"Cloud",img:"☁️"}, 
+  {name:"Networking",img:"🔗"}, 
+  {name:"Startup",img:"💡"} 
+];
+
+const animalData = [ // Crypto Match
+  {name:"Bitcoin",img:"₿"}, 
+  {name:"Ethereum",img:"Ξ"}, 
+  {name:"Smart Contract",img:"📜"}, 
+  {name:"DeFi",img:"🔗"}, 
+  {name:"Wallet",img:"💳"}, 
+  {name:"Mining",img:"⛏️"}, 
+  {name:"NFT",img:"🖼️"}, 
+  {name:"Exchange",img:"🔄"} 
+];
+// --- END GAME DATA ---
+
+let currentUserName = "Guest";
+let activeGameType = 'fruit'; 
+let currentCoins = 0; // Represents Tokens
+let currentGameCount = 0; 
+let currentLevel = {
+    fruit: 1,
+    toy: 1,
+    animal: 0 
+}; 
+let currentGlobalLevel = 1; 
+let prestigeCount = 0; 
+
+// 💡 Track successful games played on current level
+let gamesPlayedOnCurrentLevel = {
+    fruit: 0,
+    toy: 0,
+    animal: 0
+};
+
+let isAnimalUnlocked = false; // Represents isCryptoUnlocked
+
+// --- CONFIGURATION END ---
+
+// Simple Base64 utility (Unchanged)
+const simpleEncode = (str) => btoa(str);
+const simpleDecode = (str) => {
+    try {
+        return atob(str);
+    } catch (e) {
+        return str; 
+    }
+};
+
+// --- TOAST MESSAGE UTILITY --- (Unchanged)
+function showToast(message, type = 'success') {
+    const container = document.getElementById("toastContainer");
+    
+    let icon = '';
+    // Adult Theme Change: Icon colors match
+    if (type === 'success') {
+        icon = '<i class="fas fa-check-circle"></i>';
+    } else if (type === 'error') {
+        icon = '<i class="fas fa-exclamation-triangle"></i>';
+    } else if (type === 'info') {
+        icon = '<i class="fas fa-info-circle"></i>';
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.innerHTML = icon + message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10); 
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if(toast.parentElement) container.removeChild(toast);
+        }, 300); 
+    }, 1500); 
+}
+
+// --- NEW CUSTOM MODAL FUNCTIONS (Restored and Fixed) ---
+
+function showCustomConfirmationModal(title, message, callback) {
+    const modal = document.getElementById('customModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    
+    modalTitle.innerText = title;
+    // Adult Theme Change: Message text for Tokens
+    modalMessage.innerHTML = message.replace(/Coins/g, 'Tokens');
+
+    // Attach callback to buttons temporarily 
+    const confirmBtn = modal.querySelector('.confirm-btn');
+    const cancelBtn = modal.querySelector('.cancel-btn');
+    
+    // Create new, single-use listeners to prevent running the callback multiple times
+    const handleConfirm = () => {
+        modal.classList.remove('show');
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+        callback(true); // Pass 'true' for OK
+    };
+
+    const handleCancel = () => {
+        modal.classList.remove('show');
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+        callback(false); // Pass 'false' for Cancel
+    };
+
+    // Remove existing listeners (safety measure)
+    confirmBtn.onclick = null;
+    cancelBtn.onclick = null;
+    
+    // Attach the new handlers
+    confirmBtn.addEventListener('click', handleConfirm);
+    cancelBtn.addEventListener('click', handleCancel);
+    
+    modal.classList.add('show');
+}
+
+// --- END NEW CUSTOM MODAL FUNCTIONS ---
+
+
+// --- GAME LIMIT AND COIN MANAGEMENT FUNCTIONS --- 
+
+function getTodayDateString() {
+    return new Date().toDateString();
+}
+
+function loadGameCount(gameType) {
+    const dateKey = LAST_PLAY_DATE_PREFIX + gameType;
+    const countKey = GAME_COUNT_PREFIX + gameType;
+    const lastPlayDate = localStorage.getItem(dateKey);
+    const today = getTodayDateString();
+    
+    if (lastPlayDate === today) {
+        currentGameCount = parseInt(localStorage.getItem(countKey) || 0);
+    } else {
+        currentGameCount = 0;
+        localStorage.setItem(dateKey, today);
+        localStorage.setItem(countKey, currentGameCount);
+    }
+}
+
+function updateGameCount() {
+    currentGameCount++;
+    const countKey = GAME_COUNT_PREFIX + activeGameType;
+    const dateKey = LAST_PLAY_DATE_PREFIX + activeGameType;
+    
+    localStorage.setItem(countKey, currentGameCount);
+    localStorage.setItem(dateKey, getTodayDateString());
+}
+
+function checkGameLimit() {
+    loadGameCount(activeGameType); 
+    const limit = GAME_LIMITS[activeGameType] || 0;
+    
+    // 💡 Limit Check: Opens Interstitial Ad if limit is reached
+    if (currentGameCount >= limit) {
+        if (INTERSTITIAL_AD_URL.includes('http')) {
+             setTimeout(() => {
+                window.open(INTERSTITIAL_AD_URL, '_blank');
+             }, 500);
+        }
+    }
+    
+    return currentGameCount >= limit;
+}
+
+function loadCoins(email) {
+    if (email) {
+        // Changed to Tokens storage key
+        const storedCoins = localStorage.getItem(`${COINS_STORAGE_KEY}_${email}`);
+        currentCoins = storedCoins ? parseInt(storedCoins) : 0;
+    } else {
+        currentCoins = 0; 
+    }
+}
+
+function saveCoins(email) {
+    if (email) {
+        // Changed to Tokens storage key
+        localStorage.setItem(`${COINS_STORAGE_KEY}_${email}`, currentCoins);
+    }
+}
+
+function addCoins(amount) {
+    currentCoins += amount;
+    const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+    saveCoins(lastLoggedInEmail); 
+    updateDashboard();
+}
+
+// ✅ FINAL UPDATED LOGIC: Watch Ad to Earn 200 Tokens (Delay + Confirmation Modal)
+function watchAdToEarnCoins() {
+    const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+    if (!lastLoggedInEmail) {
+        showToast("Error: Please log in first.", 'error');
+        return;
+    }
+
+    showToast(`Opening Ad... Please watch the full ad in the new window!`, 'info');
+    
+    // 1. Open Ad in New Window
+    if (REWARDED_AD_URL.includes('http')) {
+        window.open(REWARDED_AD_URL, '_blank'); 
+    }
+
+    // 2. DELAY: Wait 7 seconds before showing the confirmation popup
+    setTimeout(() => {
+        
+        // 3. Show manual confirmation using the custom modal
+        const title = "Collect Your Reward!";
+        // Adult Theme Change: Tokens
+        const message = `Did you successfully watch the full Ad (or click the close/back button in the ad window)? Click **OK** to receive **${COIN_AD_REWARD}** Tokens.`;
+        
+        showCustomConfirmationModal(title, message, (isConfirmed) => {
+             // 4. Reward Logic: Only run if OK is confirmed (isConfirmed === true)
+            if (isConfirmed) {
+                // Double check user state before rewarding
+                if (localStorage.getItem("isLoggedIn") === "true" && localStorage.getItem("lastLoggedInEmail") === lastLoggedInEmail) {
+                    addCoins(COIN_AD_REWARD);
+                    showToast(`🎉 ${COIN_AD_REWARD} Tokens Added! Thank you!`, 'success');
+                } else {
+                    showToast("Error: Login session lost. Please try again.", 'error');
+                }
+            } else {
+                 // 5. If 'Cancel' is clicked, do not reward the tokens.
+                 showToast("Tokens not added. Click OK after watching the ad to collect your reward.", 'info');
+            }
+        });
+        
+    }, 7000); // 7 सेकंड का विलंब (Delay of 7 seconds)
+}
+
+// --- LEVEL & UNLOCK MANAGEMENT FUNCTIONS ---
+
+function loadLevel(email) {
+    if (email) {
+        const storedLevels = localStorage.getItem(`${LEVEL_STORAGE_KEY}_${email}`);
+        const storedPrestige = localStorage.getItem(`${PRESTIGE_STORAGE_KEY}_${email}`); 
+        const storedProgress = localStorage.getItem(`${GAMES_PLAYED_LEVEL_KEY}_${email}`); 
+        // Changed to Crypto unlock key
+        const storedUnlock = localStorage.getItem(`${ANIMAL_UNLOCKED_KEY}_${email}`); 
+
+        try {
+            const defaultLockedLevel = {...DEFAULT_LEVELS, animal: 0};
+            currentLevel = storedLevels ? JSON.parse(storedLevels) : defaultLockedLevel;
+
+            if (!storedLevels || currentLevel.animal === 0) {
+                 isAnimalUnlocked = false;
+                 currentLevel.animal = 0;
+            } else {
+                 isAnimalUnlocked = storedUnlock === 'true'; 
+            }
+
+            prestigeCount = storedPrestige ? parseInt(storedPrestige) : 0; 
+            gamesPlayedOnCurrentLevel = storedProgress ? JSON.parse(storedProgress) : { fruit: 0, toy: 0, animal: 0 }; 
+            
+            // Calculate Global Level (only count unlocked games)
+            const levelsArr = Object.values(currentLevel).filter(lvl => lvl > 0);
+            const sum = levelsArr.reduce((a, b) => a + b, 0);
+            currentGlobalLevel = levelsArr.length > 0 ? Math.round(sum / levelsArr.length) : 1;
+
+        } catch (e) {
+            currentLevel = {...DEFAULT_LEVELS, animal: 0};
+            currentGlobalLevel = 1;
+            prestigeCount = 0;
+            gamesPlayedOnCurrentLevel = { fruit: 0, toy: 0, animal: 0 }; 
+            isAnimalUnlocked = false; 
+        }
+    } else {
+        currentLevel = {...DEFAULT_LEVELS, animal: 0}; 
+        currentGlobalLevel = 1;
+        prestigeCount = 0;
+        gamesPlayedOnCurrentLevel = { fruit: 0, toy: 0, animal: 0 }; 
+        isAnimalUnlocked = false;
+    }
+    updateDashboard();
+}
+
+function saveLevel(email) {
+    if (email) {
+        localStorage.setItem(`${LEVEL_STORAGE_KEY}_${email}`, JSON.stringify(currentLevel));
+        localStorage.setItem(`${PRESTIGE_STORAGE_KEY}_${email}`, prestigeCount);
+        localStorage.setItem(`${GAMES_PLAYED_LEVEL_KEY}_${email}`, JSON.stringify(gamesPlayedOnCurrentLevel)); 
+        // Changed to Crypto unlock key
+        localStorage.setItem(`${ANIMAL_UNLOCKED_KEY}_${email}`, isAnimalUnlocked); 
+    }
+}
+
+// Check if base games are maxed (Lvl 4)
+function areBaseGamesMaxed() {
+    return currentLevel.fruit >= MAX_LEVEL && currentLevel.toy >= MAX_LEVEL;
+}
+
+
+// 🟢 LEVEL UP LOGIC: Coin Upgrade (Primary method now)
+function levelUpGame(gameType) {
+    // Adult Theme Change: Game name
+    const gameName = gameType === 'fruit' ? 'Invest Match' : gameType === 'toy' ? 'Tech Match' : 'Crypto Match';
+    
+    if (!isAnimalUnlocked && gameType === 'animal') {
+        showToast("Crypto Match is locked! Unlock it first.", 'error');
+        return;
+    }
+
+    const currentLvl = currentLevel[gameType] || 1;
+    const gamesPlayed = gamesPlayedOnCurrentLevel[gameType] || 0;
+
+    if (currentLvl >= MAX_LEVEL) {
+        showToast(`${gameName} is already at Max Level!`, 'info'); 
+        return;
+    }
+    
+    if (gamesPlayed < GAMES_NEEDED_FOR_UPGRADE) {
+        showToast(`You must play ${GAMES_NEEDED_FOR_UPGRADE - gamesPlayed} more rounds to unlock Boost!`, 'error');
+        return;
+    }
+
+    const gameCosts = GAME_LEVEL_COSTS[gameType];
+    const nextLevelData = gameCosts.find(l => l.level === currentLvl);
+    const cost = nextLevelData ? nextLevelData.cost : Infinity; 
+
+    if (currentCoins >= cost) {
+        currentCoins -= cost; 
+        currentLevel[gameType]++; 
+        
+        // ✅ Reset game count for the new level
+        gamesPlayedOnCurrentLevel[gameType] = 0; 
+
+        const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+        saveCoins(lastLoggedInEmail);
+        saveLevel(lastLoggedInEmail); 
+        loadLevel(lastLoggedInEmail); 
+        
+        // Adult Theme Change: Text (Level Up to Boost)
+        showToast(`Boost Complete! You are now Level ${currentLevel[gameType]}. The challenge increases!`, 'success'); 
+    } else {
+        // Adult Theme Change: Text (Coins to Tokens)
+        showToast(`You need ${cost} Tokens to Boost ${gameName} to Lvl ${currentLvl + 1}.`, 'error');
+    }
+}
+
+
+// UNLOCK LOGIC (Replaces Prestige)
+function handleUnlockAnimalGame() {
+    const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+    
+    if (!lastLoggedInEmail) {
+        showToast("Error: Please log in first.", 'error');
+        return;
+    }
+    
+    if (currentCoins < UNLOCK_COST) {
+        showToast(`You need ${UNLOCK_COST} Tokens to Unlock Crypto Match!`, 'error');
+        return;
+    }
+    
+    if (!areBaseGamesMaxed()) {
+         // Adult Theme Change: Text (Game names)
+         showToast("Error: Both Invest Match and Tech Match must be Max Level (Lvl 4) before unlocking.", 'error');
+         return;
+    }
+
+    // Adult Theme Change: Text (Game names, Coins to Tokens)
+    if (!confirm(`Are you sure you want to Unlock Crypto Match? This will cost ${UNLOCK_COST} Tokens and reset Invest and Tech Match to Level 1.`)) {
+        return;
+    }
+
+    // 1. Deduct Cost
+    currentCoins -= UNLOCK_COST;
+
+    // 2. Increase Prestige/Unlock Count
+    prestigeCount++;
+
+    // 3. Reset Base Games
+    currentLevel.fruit = 1; // Invest Match
+    currentLevel.toy = 1; // Tech Match
+    gamesPlayedOnCurrentLevel.fruit = 0;
+    gamesPlayedOnCurrentLevel.toy = 0;
+    
+    // 4. Unlock Crypto Match
+    currentLevel.animal = 1; // Crypto Match
+    isAnimalUnlocked = true;
+
+    // 5. Save and Update UI
+    saveCoins(lastLoggedInEmail);
+    saveLevel(lastLoggedInEmail);
+    loadLevel(lastLoggedInEmail); 
+    
+    // Adult Theme Change: Text (Game name)
+    showToast(`👑 Crypto Match UNLOCKED! Invest and Tech reset to Level 1.`, 'success');
+    updateDashboard(); 
+}
+
+
+// --- INITIALIZE APP & AUTH FUNCTIONS --- 
+
+function initApp() {
+    const mainApp = document.getElementById("mainApp");
+    if (mainApp) mainApp.style.display = "block";
+    
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const lastLoggedInName = localStorage.getItem("userName");
+    const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+    
+    currentGameCount = 0; 
+
+    if (isLoggedIn && lastLoggedInName && lastLoggedInEmail) {
+        currentUserName = lastLoggedInName;
+        loadCoins(lastLoggedInEmail); 
+        loadLevel(lastLoggedInEmail); 
+        document.getElementById("dashboard").style.display = "block";
+    } else {
+        document.getElementById("loginPage").style.display = "block"; 
+        loadCoins(null); 
+        loadLevel(null); 
+    }
+    
+    updateDashboard(); 
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    initApp(); 
+});
+
+
+// LOGIN/REGISTER FUNCTIONS (Unchanged)
+let isLoginMode = false; 
+
+function toggleLoginRegister(setLogin = !isLoginMode) {
+    isLoginMode = setLogin;
+    
+    const nameInput = document.getElementById("nameInput");
+    const authButton = document.getElementById("authButton");
+    const toggleMessage = document.getElementById("toggleMessage");
+    const toggleLink = document.querySelector('#loginPage a');
+
+    if (isLoginMode) {
+        nameInput.style.display = 'none'; 
+        authButton.innerText = "Login";
+        toggleMessage.innerText = "Don't have an account?";
+        // Adult Theme Change: Link text
+        toggleLink.innerText = "Click here to register";
+    } else {
+        nameInput.style.display = 'block'; 
+        authButton.innerText = "Create Account";
+        toggleMessage.innerText = "Already have an account?";
+        // Adult Theme Change: Link text
+        toggleLink.innerText = "Click here to login";
+    }
+    document.getElementById("loginMessage").innerText = "";
+}
+
+function handleAuth(){
+  const n = document.getElementById("nameInput").value.trim(); 
+  const e = document.getElementById("email").value.trim();
+  const p = document.getElementById("password").value; 
+  
+  const loginPage = document.getElementById("loginPage");
+  const dashboard = document.getElementById("dashboard");
+  const loginMessage = document.getElementById("loginMessage"); 
+  
+  loginMessage.innerText = "";
+  
+  if(!e || !p){
+    loginMessage.innerText = "Please fill email and password.";
+    setTimeout(() => { loginMessage.innerText = ""; }, 3000);
+    return;
+  }
+  
+  if (!isLoginMode && !n) { 
+    loginMessage.innerText = "Please fill your name for registration.";
+    setTimeout(() => { loginMessage.innerText = ""; }, 3000);
+    return;
+  }
+
+  const storedUser = localStorage.getItem(e);
+  
+  if (isLoginMode) {
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        const decodedPassword = simpleDecode(user.password); 
+        
+        if (decodedPassword === p) {
+            localStorage.setItem("isLoggedIn","true");
+            localStorage.setItem("userName", user.name); 
+            localStorage.setItem("lastLoggedInEmail", e); 
+            currentUserName = user.name;
+            loadCoins(e); 
+            loadLevel(e); 
+
+            loginPage.style.display="none";
+            dashboard.style.display="block";
+            updateDashboard();
+        } else {
+            loginMessage.innerText = "Login failed: Incorrect password.";
+            setTimeout(() => { loginMessage.innerText = ""; }, 3000);
+        }
+    } else {
+        loginMessage.innerText = "Login failed: Account not found. Please register first.";
+        toggleLoginRegister(false); 
+        setTimeout(() => { loginMessage.innerText = ""; }, 4000);
+    }
+    
+  } else {
+    if (storedUser) {
+        loginMessage.innerText = "Registration failed: An account with this email already exists. Please login.";
+        toggleLoginRegister(true); 
+        setTimeout(() => { loginMessage.innerText = ""; }, 4000);
+        return;
+    }
+    
+    // Initial registration
+    const encodedPassword = simpleEncode(p);
+    localStorage.setItem(e, JSON.stringify({name: n, password: encodedPassword})); 
+    
+    localStorage.setItem("isLoggedIn","true");
+    localStorage.setItem("userName", n); 
+    localStorage.setItem("lastLoggedInEmail", e); 
+    currentUserName = n;
+    
+    // Set initial coins/tokens, game levels, and prestige
+    // Changed to Tokens storage key
+    localStorage.setItem(`${COINS_STORAGE_KEY}_${e}`, 0);
+    // Initial Level: Animal (Crypto) is Lvl 0 (Locked)
+    localStorage.setItem(`${LEVEL_STORAGE_KEY}_${e}`, JSON.stringify({...DEFAULT_LEVELS, animal: 0})); 
+    localStorage.setItem(`${PRESTIGE_STORAGE_KEY}_${e}`, 0); 
+    localStorage.setItem(`${GAMES_PLAYED_LEVEL_KEY}_${e}`, JSON.stringify({ fruit: 0, toy: 0, animal: 0 })); 
+    // Changed to Crypto unlock key
+    localStorage.setItem(`${ANIMAL_UNLOCKED_KEY}_${e}`, 'false'); 
+    loadCoins(e); 
+    loadLevel(e); 
+
+    loginPage.style.display="none";
+    dashboard.style.display="block";
+    
+    updateDashboard();
+  }
+}
+
+function logout(){
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userName"); 
+  localStorage.removeItem("lastLoggedInEmail");
+  currentUserName = "Guest";
+  currentCoins = 0; 
+  currentLevel = {...DEFAULT_LEVELS, animal: 0}; 
+  currentGlobalLevel = 1;
+  prestigeCount = 0; 
+  gamesPlayedOnCurrentLevel = { fruit: 0, toy: 0, animal: 0 }; 
+  isAnimalUnlocked = false; 
+
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("loginPage").style.display="block";
+  toggleLoginRegister(true); 
+  updateDashboard();
+}
+
+// UPDATE DASHBOARD (FINAL LOGIC)
+function updateDashboard(){
+  const nameDisplay = document.getElementById("profileNameDisplay"); 
+  const profilePic = document.querySelector('.profile-pic'); 
+  const coinCountElement = document.getElementById("coinCount");
+  const levelDisplayElement = document.getElementById("levelDisplay"); 
+  const prestigeCountDisplay = document.getElementById("prestigeCountDisplay"); 
+  const earnCoinBtn = document.getElementById('earn-coin-btn'); 
+
+  if (nameDisplay && currentUserName) {
+      nameDisplay.innerText = `Hello, ${currentUserName}!`;
+      if (profilePic && currentUserName.length > 0) {
+          profilePic.innerText = currentUserName[0].toUpperCase();
+      }
+  } else if (nameDisplay) {
+      nameDisplay.innerText = `Hello, Guest!`;
+      if (profilePic) profilePic.innerText = 'A'; 
+  }
+  
+  if (coinCountElement) {
+      coinCountElement.innerText = currentCoins;
+  }
+  
+  // Recalculate Global Level (Only unlocked games)
+  const levelsArr = Object.values(currentLevel).filter(lvl => lvl > 0);
+  const sum = levelsArr.reduce((a, b) => a + b, 0);
+  currentGlobalLevel = levelsArr.length > 0 ? Math.round(sum / levelsArr.length) : 1;
+  
+  if (levelDisplayElement) {
+      levelDisplayElement.innerText = `Level: ${currentGlobalLevel}`; 
+  }
+  if (prestigeCountDisplay) { 
+      // Adult Theme Change: Coins to Tokens in icon
+      prestigeCountDisplay.innerHTML = `<i class="fas fa-crown"></i> Prestige: ${prestigeCount}`; 
+  }
+
+  
+  // 🔑 UNLOCK/LOCK LOGIC FOR CRYPTO MATCH 🔑
+  const unlockContainer = document.getElementById('unlock-container');
+  const unlockCostInfo = document.getElementById('unlock-cost-info');
+  // Adult Theme Change: Class name
+  const animalGroup = document.querySelector('.crypto-group');
+  const unlockBtn = document.getElementById('unlock-button');
+  const lockOverlay = document.getElementById('lock-overlay-animal');
+  
+  const baseGamesMaxed = areBaseGamesMaxed();
+  
+  // Reset visibility for unlock container first
+  unlockContainer.style.display = 'none';
+
+  if (!isAnimalUnlocked) {
+    // CRYPTO MATCH IS LOCKED
+    lockOverlay.style.display = 'flex';
+    
+    // Hide upgrade buttons for Crypto Match when locked
+    document.getElementById('upgrade-animal').style.display = 'none';
+    document.getElementById('progress-animal').style.display = 'none'; 
+    
+    if (baseGamesMaxed) {
+        // Condition met: Show UNLOCK button
+        unlockContainer.style.display = 'flex';
+        // Adult Theme Change: Text (Game name, Coins to Tokens)
+        unlockBtn.innerHTML = `<i class="fas fa-unlock"></i> Unlock Crypto Match (${UNLOCK_COST} <i class="fas fa-dollar-sign"></i>)`;
+        // Adult Theme Change: Text (Game names, Coins to Tokens)
+        unlockCostInfo.innerText = `Invest & Tech Match are Max Level! Unlock the next focus! You currently have: ${currentCoins} Tokens.`;
+        
+        if (currentCoins < UNLOCK_COST) {
+            unlockBtn.disabled = true;
+            unlockBtn.style.opacity = 0.5;
+        } else {
+            unlockBtn.disabled = false;
+            unlockBtn.style.opacity = 1;
+        }
+    } else {
+        // Condition not met: Show progress for unlocking
+        document.getElementById('progress-animal').style.display = 'block'; 
+        // Adult Theme Change: Text (Game names)
+        document.getElementById('progress-animal').innerText = 
+            `Lock Condition: Max out Invest (Lvl ${currentLevel.fruit}/${MAX_LEVEL}) and Tech (Lvl ${currentLevel.toy}/${MAX_LEVEL})`;
+        document.getElementById('progress-animal').style.color = '#ff4b2b';
+        
+        // Hide unlock button
+        unlockContainer.style.display = 'none';
+    }
+  } else {
+    // CRYPTO MATCH IS UNLOCKED (Behaves like other games)
+    lockOverlay.style.display = 'none';
+    // Show progress/upgrade for Crypto Match
+    document.getElementById('progress-animal').style.display = 'block'; 
+    document.getElementById('upgrade-animal').style.display = 'flex';
+  }
+
+
+  
+  // --- Individual Game Update Logic (Only Token Upgrade) ---
+  const games = ['fruit', 'toy', 'animal'];
+  
+  games.forEach(game => {
+    const currentLvl = currentLevel[game] || 1;
+    const gamesPlayed = gamesPlayedOnCurrentLevel[game] || 0; 
+    const lvlElement = document.getElementById(`lvl-${game}`);
+    const progressElement = document.getElementById(`progress-${game}`); 
+    const upgradeBtn = document.getElementById(`upgrade-${game}`);
+    
+    const isReadyToUpgrade = gamesPlayed >= GAMES_NEEDED_FOR_UPGRADE; 
+    
+    // Skip locked game
+    if (game === 'animal' && !isAnimalUnlocked) return; 
+    
+    // Adult Theme Change: Text (Game names)
+    const gameName = game === 'fruit' ? 'Invest Match' : game === 'toy' ? 'Tech Match' : 'Crypto Match';
+
+
+    if (lvlElement) {
+        lvlElement.innerText = `Lvl ${currentLvl}`;
+    }
+    
+    if (currentLvl >= MAX_LEVEL) {
+         progressElement.innerText = 'Max Level Reached!';
+         progressElement.style.color = 'lightgreen';
+         
+         // Hide upgrade button when MAX LEVEL is reached
+         upgradeBtn.style.display = 'none';
+         
+    } else {
+        // Logic for Lvl 1, 2, or 3
+        progressElement.innerText = `Rounds Played: ${gamesPlayed} / ${GAMES_NEEDED_FOR_UPGRADE} (to unlock Boost to Lvl ${currentLvl + 1})`;
+        progressElement.style.color = isReadyToUpgrade ? 'lightgreen' : 'yellow';
+
+        const gameCosts = GAME_LEVEL_COSTS[game];
+        const nextLevelData = gameCosts.find(l => l.level === currentLvl);
+        const cost = nextLevelData ? nextLevelData.cost : '???';
+        
+        // Show/Hide based on progress: Upgrade button is hidden until progress is met
+        if (isReadyToUpgrade) {
+            upgradeBtn.style.display = 'flex';
+        } else {
+            upgradeBtn.style.display = 'none';
+        }
+        
+        // Adult Theme Change: Text (Upgrade to Boost, Coins to Tokens)
+        upgradeBtn.innerHTML = `
+            <i class="fas fa-arrow-up"></i> Boost to Lvl ${currentLvl + 1} (${cost} 
+            <i class="fas fa-dollar-sign"></i>)
+        `;
+        
+        // Disable if not enough coins
+        if (currentCoins < cost || !isReadyToUpgrade) {
+            upgradeBtn.style.opacity = 0.5;
+            upgradeBtn.disabled = true;
+        } else {
+            upgradeBtn.style.opacity = 1;
+            upgradeBtn.disabled = false;
+        }
+    }
+  });
+  
+  // Ensure the 'Ad to Earn' button is always visible
+  if (earnCoinBtn) {
+       // Update the coin reward text dynamically (Coins to Tokens)
+       earnCoinBtn.innerHTML = `<i class="fas fa-play-circle"></i> Watch Ad for ${COIN_AD_REWARD} Tokens`;
+       earnCoinBtn.style.display = 'flex'; 
+  }
+}
+
+
+// START GAME (Updated for Lock Check)
+function startGame(gameType){
+  activeGameType = gameType; 
+  
+  if (gameType === 'animal' && !isAnimalUnlocked) {
+    // Adult Theme Change: Text (Game names)
+    showToast("Crypto Match is currently locked! Max out Invest and Tech Match to unlock it.", 'error');
+    return;
+  }
+  
+  loadGameCount(activeGameType); 
+  
+  if (checkGameLimit()) {
+    const limit = GAME_LIMITS[activeGameType] || 0;
+    // Adult Theme Change: Text
+    showToast(`You have reached the daily limit of ${limit} rounds for ${activeGameType}. Please come back tomorrow!`, 'info');
+    return;
+  }
+  
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("gamePage").style.display="block";
+  newRound();
+}
+
+// CHECK ANSWER (Using COIN_REWARD = 30 and Interstitial Ad every 5 games)
+function checkAnswer(win){
+    const msg = document.getElementById("message");
+    
+    if (win) {
+        // Adult Theme Change: Text (Coins to Tokens)
+        msg.innerText = `Correct! You earned ${COIN_REWARD} Tokens! Next Round...`;
+        addCoins(COIN_REWARD); 
+        updateGameCount(); 
+        
+        // 💡 Increment game progress on success
+        gamesPlayedOnCurrentLevel[activeGameType]++; 
+        const lastLoggedInEmail = localStorage.getItem("lastLoggedInEmail");
+        saveLevel(lastLoggedInEmail); 
+        
+        // NEW AD LOGIC: Show Ad every 5 successful rounds
+        if (currentGameCount % 5 === 0 && INTERSTITIAL_AD_URL.includes('http')) { 
+             setTimeout(() => {
+                window.open(INTERSTITIAL_AD_URL, '_blank');
+             }, 500);
+        }
+        
+    } else {
+        msg.innerText = "Wrong! Try again";
+    }
+    
+    if (checkGameLimit()) {
+        const limit = GAME_LIMITS[activeGameType] || 0;
+         setTimeout(() => {
+            // Adult Theme Change: Text
+            showToast(`Limit Reached! You played ${limit} rounds of ${activeGameType}. Come back tomorrow!`, 'info');
+            backToDashboard();
+        }, 1000);
+        return;
+    }
+    
+    setTimeout(newRound, 1000);
+}
+
+// NEW ROUND (Unchanged)
+function newRound(){
+  loadGameCount(activeGameType); 
+  
+  if (checkGameLimit()) {
+      const limit = GAME_LIMITS[activeGameType] || 0;
+      document.getElementById("question").innerText = `${activeGameType.toUpperCase()} Limit Reached`;
+      document.getElementById("gameLimitDisplay").innerText = `You have played ${limit} rounds today. Resetting tomorrow!`;
+      document.getElementById("gameGrid").innerHTML = "";
+      return;
+  }
+  
+  const grid = document.getElementById("gameGrid"); 
+  const questionElement = document.getElementById("question");
+  const limitDisplayElement = document.getElementById("gameLimitDisplay");
+  const limit = GAME_LIMITS[activeGameType] || 0;
+  
+  grid.innerHTML = "";
+  document.getElementById("message").innerHTML = "";
+
+  let gameData;
+  let gameTitle;
+
+  if (activeGameType === 'fruit') {
+    gameData = fruitData;
+    gameTitle = "Invest Match";
+  } else if (activeGameType === 'toy') {
+    gameData = toyData;
+    gameTitle = "Tech Match";
+  } else if (activeGameType === 'animal') {
+    gameData = animalData;
+    gameTitle = "Crypto Match";
+  } else {
+    gameData = fruitData; 
+    gameTitle = "Focus Match";
+  }
+
+  // --- LEVEL LOGIC: Determine Options Count and Grid Style ---
+  const currentLevelForGame = currentLevel[activeGameType] || 1; 
+  
+  const gameCosts = GAME_LEVEL_COSTS[activeGameType];
+  const currentLevelData = gameCosts.find(l => l.level === currentLevelForGame) || gameCosts[0];
+
+  const numberOfOptions = currentLevelData.size;
+  
+  const optionsCount = Math.min(numberOfOptions, gameData.length); 
+
+  let gridColumns;
+  if (optionsCount <= 4) gridColumns = "1fr 1fr"; 
+  else if (optionsCount === 6) gridColumns = "1fr 1fr 1fr"; 
+  else if (optionsCount === 9) gridColumns = "1fr 1fr 1fr"; 
+  else if (optionsCount === 12) gridColumns = "1fr 1fr 1fr 1fr";
+  else gridColumns = "1fr 1fr"; 
+
+  grid.style.gridTemplateColumns = gridColumns;
+  // --- END LEVEL LOGIC ---
+
+
+  let options = [...gameData].sort(()=>0.5-Math.random()).slice(0,optionsCount);
+  let correct = options[Math.floor(Math.random()*options.length)];
+
+  questionElement.innerText = `[Lvl ${currentLevelForGame}] Find the: ${correct.name} (${gameTitle})`;
+  limitDisplayElement.innerText = `Round: ${currentGameCount + 1} / ${limit}`;
+
+
+  options.forEach(f=>{
+    let div = document.createElement("div"); 
+    div.innerHTML = f.img; 
+    div.className = "game-img"; 
+    div.onclick = ()=>checkAnswer(f.name===correct.name); 
+    grid.appendChild(div); 
+  });
+}
+
+function backToDashboard(){
+  document.getElementById("gamePage").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  updateDashboard();
+}
+
+// REMOVED: function openTelegram() { ... }
+
+function openRateUs() {
+    window.open(APP_STORE_LINK, '_blank');
+}
+
+
+// ===============================================
+// 💡 ADSTERRA BANNER CODE INJECTION 💡
+// ===============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const bannerContainer = document.getElementById('adsterra-banner-container');
+    if (!bannerContainer) return;
+
+    // ❌ OLD CODE REMOVED ❌
+    // bannerContainer.innerHTML = ''; 
+    // bannerContainer.style.backgroundColor = 'transparent'; 
+    
+    // // Replace "container-xxxxxx" with your actual Adsterra banner ID
+    // const adsterraBannerDiv = `
+    // <div id="container-xxxxxx" style="width: 320px; height: 50px; margin: 0 auto;"></div>
+    // `;
+
+    // bannerContainer.innerHTML = adsterraBannerDiv;
+    // ❌ END OLD CODE REMOVED ❌
+    
+    // 🎯 NEW: Adsterra Banner Script is now placed directly in the HTML body 🎯
+    // We just ensure the container itself is clean (the script handles the placement)
+
+});
+
+// ===============================================
+</script>
+
+</body>
+</html>
